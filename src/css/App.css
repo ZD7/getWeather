@@ -1,0 +1,11 @@
+.App {
+  text-align: center;
+  margin: 0 auto;
+  max-width: 1400px;
+  background-color: #727883;
+  padding: 10px;
+  
+  font-size: calc(10px + 2vmin);
+  color: white;
+  min-height: 780px;
+}
