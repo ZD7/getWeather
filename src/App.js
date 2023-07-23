@@ -2,8 +2,8 @@ import styled from "styled-components";
 import React, { useState } from "react";
 import "./css/App.css";
 import WeatherNow from "./components/weather_now";
-import dataWeather from "./data/weather.json";
-import dataForecast from "./data/forecast.json";
+// import dataWeather from "./data/weather.json";
+// import dataForecast from "./data/forecast.json";
 import WeatherForecast from "./components/weather_forecast";
 
 function App() {
