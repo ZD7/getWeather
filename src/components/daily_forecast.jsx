@@ -49,7 +49,7 @@ const Wrapper = styled.div`
 const Container = styled.div`
   display: flex;
   justify-content: flex-start;
-  width: 1280px;
+  min-width: 1280px;
 `;
 
 const Block = styled.div`

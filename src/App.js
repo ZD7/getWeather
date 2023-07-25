@@ -5,14 +5,28 @@ import WeatherNow from "./components/weather_now";
 // import dataWeather from "./data/weather.json";
 // import dataForecast from "./data/forecast.json";
 import WeatherForecast from "./components/weather_forecast";
+import Header from "./components/header";
+
+let isCity;
 
 function App() {
   const [isData, setIsData] = useState("");
-  const [isCity, setIsCity] = useState("");
 
   const changeCity = (e) => {
-    setIsCity("q=" + e.target.value);
+    isCity = "q=" + e.target.value;
   };
+
+  function getCityInfo(isData) {
+    if (isData.cod === "400" || isData === "") {
+      return "Введите название города";
+    } else if (isData.cod === "404") {
+      return "Город не найден, введите название еще раз";
+    } else if (isData.hasOwnProperty("city")) {
+      return isData.city.name;
+    } else {
+      return isData.name;
+    }
+  }
 
   const getPosition = () => {
     if (!navigator.geolocation) {
@@ -32,7 +46,7 @@ function App() {
   const success = (position) => {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    setIsCity(`lat=${latitude}&lon=${longitude}`);
+    isCity = `lat=${latitude}&lon=${longitude}`;
     document.getElementById("info").innerHTML = "Местоположение установлено";
   };
 
@@ -51,36 +65,19 @@ function App() {
       })
       .then((data) => {
         setIsData(data);
-        document.getElementById("city").value = "";
         // Объект результата в формате JSON
       })
       .catch(() => {
         alert("Ошибка получения данных о погоде, попробуйте еще раз");
       });
   };
+
   return (
     <Wrapper className="App">
       <Container>
-        <Block>
-          <input id="city" onChange={changeCity} placeholder="название города"/>
-          <button id="btn_send1" onClick={getWeather} value="weather">
-            погода сейчас
-          </button>
-          <button id="btn_send2" onClick={getWeather} value="forecast">
-            прогноз погоды на 5 дней
-          </button>
-        </Block>
+        <Header getWeather={getWeather} changeCity={changeCity} />
 
-        <div id="info">
-          {isData.cod === "400" || isData === ""
-            ? "Введите название города"
-            : isData.cod === "404"
-            ? "Город не найден, введите название еще раз"
-            : isData.hasOwnProperty("city")
-            ? isData.city.name
-            : isData.name}
-        </div>
-
+        <div id="info">{getCityInfo(isData)}</div>
         <button className="chat_output" onClick={getPosition}>
           Геолокация
         </button>
@@ -106,10 +103,29 @@ const Container = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-`;
+  height: 30px;
+  white-space: nowrap;
 
-const Block = styled.div`
-  display: flex;
+  button {
+    background-color: #a18a8a;
+    color: white;
+    border-color: #a18a8a;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 0;
+    font-size: 20px;
+    height: 35px;
+  }
+
+  input {
+    font-size: 20px;
+    border: 0;
+    border-radius: 4px;
+  }
+
+  #info {
+    overflow-x: hidden;
+  }
 `;
 
 export default App;

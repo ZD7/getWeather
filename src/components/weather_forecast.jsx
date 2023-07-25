@@ -1,25 +1,41 @@
-import React from "react";
+import React, { useMemo }  from "react";
 import styled from "styled-components";
 import DailyForecast from "./daily_forecast";
 
 const WeatherForecast = ({ dataWeather }) => {
-  let newDay = dataWeather.list[0].dt_txt.slice(8, 10);
-  let arrayDays = [];
-  let arrayDay = [];
-  dataWeather.list.map((data, i) => {
-    if (data.dt_txt.slice(8, 10) === newDay) {
-      arrayDay.push(data);
-    } else {
-      arrayDays.push(arrayDay);
-      arrayDay = [];
-      newDay = data.dt_txt.slice(8, 10);
-      arrayDay.push(data);
-    }
-    if (i === dataWeather.list.length - 1) {
-      arrayDays.push(arrayDay);
-    }
-  });
+  // let newDay = dataWeather.list[0].dt_txt.slice(8, 10);
+  // let arrayDays = [];
+  // let arrayDay = [];
+  // dataWeather.list.map((data, i) => {
+  //   if (data.dt_txt.slice(8, 10) === newDay) {
+  //     arrayDay.push(data);
+  //   } else {
+  //     arrayDays.push(arrayDay);
+  //     arrayDay = [];
+  //     newDay = data.dt_txt.slice(8, 10);
+  //     arrayDay.push(data);
+  //   }
+  //   if (i === dataWeather.list.length - 1) {
+  //     arrayDays.push(arrayDay);
+  //   }
+  // });
 
+  const arrayDays = useMemo(() => {
+    return dataWeather.list.reduce((acc, data) => {
+      const day = data.dt_txt.slice(8, 10);
+      const time = data.dt_txt.slice(11, 16);
+      const lastDayArray = acc[acc.length - 1];
+      if (lastDayArray && lastDayArray[0]?.day === day) {
+        lastDayArray.push({ ...data, time });
+      } else {
+        acc.push([{ ...data, time, day}]);
+        console.log("else", [{ ...data, time, day }])
+      }
+      return acc;
+    }, []);
+  }, [dataWeather.list]);
+
+  console.log("arrayDays", arrayDays)
   return (
     <Wrapper>
       <TimeLabel>
@@ -36,6 +52,7 @@ const WeatherForecast = ({ dataWeather }) => {
 
 const Wrapper = styled.div`
   display: flex;
+  /* flex: 0 0 auto; */
   flex-direction: column;
   gap: 10px;
 

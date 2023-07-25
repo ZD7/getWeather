@@ -1,11 +1,17 @@
+:root {
+  background-color: #666d7a;
+}
+
 .App {
   text-align: center;
   margin: 0 auto;
   max-width: 1400px;
+  min-width: 1350px;
   background-color: #727883;
   padding: 10px;
   
-  font-size: calc(10px + 2vmin);
+  font-size: 25px;
   color: white;
   min-height: 780px;
+  border-radius: 10px;
 }
